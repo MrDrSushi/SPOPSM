@@ -37,15 +37,22 @@ Samples,C:\Migrations\Samples\Miscelanea,/,Migration Samples,Samples
 
 The columns above are the following:
 
-    - SourceName = it is a friendly used for each line in the .csv to refer to the source you are importing (no actual use, just for displaying)
+    - SourceName = it is a friendly name used for each line in the .csv to refer to the source you are importing,
+    it will be displayed while the script is importing the files
 
-    - SourceFolder = it could be something like: C:\Finance - or a share like: \\ADMIN\FY17\Reports  (the script will import everything from this location)
+    - SourceFolder = it points to the source folder from where the script will import the files, it could be 
+    something like: C:\Finance - or a share like: \\ADMIN\FY17\Reports
 
-    - WebSiteName = it's the destination for your migration, the script will look for a web named after this value, for example: Finance - the script will look for a web called Finance under https://adventureworks.sharepoint.com - (for root web, just leave blank or "/" if you do not intende to send the files to an specific web)
+    - WebSiteName = the destination on SharePoint Online for your migration, the script will look for a web 
+    named after this value, for example, if you specify "Finance" (no quotes needed) the script will look this
+    web called "Finance" under https://adventureworks.sharepoint.com, if you want to import within the same the
+    root web, just leave blank or use "/"
 
-    - TargetDocumentLibraryTitle = the script will create a new document library if one is not found (matched by TargetDocumentLibraryURL), in case a new document library is created the this will be used as its the friendly name, for example: "Files from Fiscal Year 2018", the actual physical name for the document library will the one specified in TargetDocumentLibraryURL
+    - TargetDocumentLibraryTitle = this is the name of the new document library to be created on SharePoint, if 
+    the script can't find one matched by the column "TargetDocumentLibraryURL"
 
-    - TargetDocumentLibraryURL = the physical name for the document library, it cannot contain any special characters, for example: FY2018 (you can use spaces but I suggest to not use them, spaces will be replaced by the ugly %20)
+    - TargetDocumentLibraryURL = the physical name for the document library, it cannot contain any special 
+    characters, for example: FY2018
 
 
 
