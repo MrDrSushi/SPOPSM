@@ -12,7 +12,7 @@ Files migrated will have have their metadata preserved along with its original f
 
 There is also **"soft upload"** mode, which creates a report which files and folders will be renamed for containing invalid characters, and what will be ignored during the migration. 
 
-#
+
 ### Using the Script
 
 Let's suppose we want to import files to **https://adventureworks.sharepoint.com/sites/dev**.
@@ -23,7 +23,7 @@ The first thing to do is to map the sources you plan to import in a custom .csv 
 
 
 
-#
+
 ### The CSV File
 
 Let's say we want to migrate the folder **C:\Finance\Docs** to a document library called **"Finance 2017"** to our tenant web at **https://adventureworks.sharepoint.com** - we need to create a .csv file and include a line like in the example below, this will instruct the script to import the contents associated with the line **Finance Files** into SharePoint to a root web into a document library called **"Finance 2017"**, along with the other lines to their respective destinations.
@@ -32,7 +32,7 @@ In the example below we are importing three different sources but you can simply
 
 |SourceName|SourceFolder|WebSiteName|TargetDocumentLibraryTitle|TargetDocumentLibraryURL|
 |----------|------------|-----------|--------------------------|------------------------|
-Dev Team (Legacy)|\\\Works\DevTeam\Projects|Development|Projects|Projects
+Dev Team (Legacy)|\\\Works\Dev\P\PRJ|Development|Projects|Projects
 **Finance Files**    |**C:\Finance\Docs**|/|**Finance 2017**|**Finance**
 Sales (Old Stuff)|\\\Customers\Bids|Commercial|Sales (Archived)|Sales2016
 
@@ -57,38 +57,30 @@ The columns above are the following:
 * **TargetDocumentLibraryURL** = the physical name for the document library, if an existing name is matched, the migration will reuse the library, otherwise a new document library will be created using this name for the URL, for example: **"FY2017DOCS"**
 
 
-#
-### Aditional Parameters
-#
 
-#
+### Aditional Parameters
+
+
+
 `-Password` 
 
 You can supply a password by using the this parameter, for example: `-Password 123XYZ`, it will be sent as clear text and will expose your password for anybody, or you can use a variable with the encripted text, for example: `-Password $ENCPASSWORD`. This parameter allows you to automate the script execution skipping the prompt for your password, and should be used with caution to not expose your credential.
 
-#
-#
 
 `-LogName`
 
 location and name of the log file, if not specified, no logs will be generated
 
-#
-#
 
 `-CSVFile`
 
 location and name of the CSV FILE containing the instructions for the migration
 
-#
-#
 
 `-UserName`
 
 SharePoint User Name
 
-#
-#
 
 `-SiteUrl`
 
@@ -105,7 +97,6 @@ You can generate a soft upload (a preview of a migration):
 In the example above, no document libraries, folder and files will be created on SharePoint, the screen output will show what an import will look like and the results are captured to a log file called **Finance.log** (another file called **Finance.html** is also generated, this is a copy of the console output in HTML format)
 
 
-#
 ### Cloning the Repo
 
 `git clone https://github.com/MrDrSushi/SPOPSM.git`
