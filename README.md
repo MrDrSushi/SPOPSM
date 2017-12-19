@@ -8,44 +8,34 @@
 
 Finally a PowerShell script aimed to simplify the migration of network shares and local folders to SharePoint Online!
 
-Use this solution to migrate files while preserving their metadata along with its original folder structure to SharePoint, the SPOPSM will validate the source, skipping invalid files such as .tmp, .ds_store, .aspx, .asmx, .ascx, .master, .xap, .swf, .jar, .xsf, .htc, will also replace invalid characters found in files and folders avoiding any interruptions on your migration, recreating on SharePoint the same structure from your source into a new or using an exisiting document library.
+Files migrated will have have their metadata preserved along with its original folder structure, it will validate the source, ignoring invalid files such as **.tmp, .ds_store, .aspx, .asmx, .ascx, .master, .xap, .swf, .jar, .xsf, .htc**, it will also replace invalid characters found in files and/or folders avoiding any interruptions during the migration, while supporting files up to 15GB.
 
-The solution will handle files over 10MB, supporting files up to 15GB, 
+There is also **"soft upload"** mode, which creates a report which files and folders will be renamed for containing invalid characters, and what will be ignored during the migration. 
 
-It also provides a "soft upload" mode, displaying a visual report of which files and folders will be renamed for containing invalid characters and what will be their new names in their new locations, and the total amount of items handled by the migration (items skipped due to invalid extensions, items renamed, totals of folders, total  number of files migrated, etc.), this option helps users understand how their data will get to SharePoint and provides an answers for the portofolio migrated mapping SOURCE -> TARGET, and also it is the option to check everything before commiting to changes on your SharePoint.
+#
+### Using the Script
 
-The script will use a custom .csv file which will contain the list of sources to be imported into SharePoint Online, in your .csv file you will specify a name to the source and its location, the target website to where all the files and folders will go, and the name of the document library where everything should be placed, the script supports also a couple of handy parameters that will provide.
+Let's suppose we want to import files to **https://adventureworks.sharepoint.com/sites/dev**.
+The first thing to do is to map the sources you plan to import in a custom .csv file, open a PowerShell session and point the script to run using the .csv you have previously created, for example:
 
-Using the script:
+`.\SPOPSM.ps1 -LogName .\Finance -CSVFile C:\Jobs\finance.csv -UserName johndoe@adventureworks.com -SiteUrl https://adventureworks.sharepoint.com/sites/dev `
 
-```PS
-.\SPOPSM.ps1 -LogName .\Finance -CSVFile C:\Jobs\finance.csv -UserName johndoe@adventureworks.com -SiteUrl https://adventureworks.sharepoint.com 
-```
 
-Once you hit enter, the script will prompt yout the password (you can supply a password by using the **-Password**, parameter, for example: **-Password 123**, or you can use a variable with the encripted text, for example: **-Password $ENCPASSWORD**), the parameter **-Password** allows you to automate the script execution skipping the prompt for your password, and allowing the script to scheduled.
 
-You can generate a soft upload (a preview of a migration):
 
-```PS
-.\SPOPSM.ps1 -LogName .\Finance -CSVFile C:\Jobs\finance.csv -UserName johndoe@adventureworks.com -SiteUrl https://adventureworks.sharepoint.com  -DoNotCreateLibraries -DoNotCreateFolders -DoNotPerformUploads
-```
+#
+### The CSV File
 
-In the example above, no document libraries, folder and files will be created on SharePoint, the screen output will show what an import will look like and the results are captured to a log file called **Finance.log** (another file called **Finance.html** is also generated, this is a copy of the console output in HTML format)
-
-### How to Use the Script
-
-Let's say we want to migrate the folder **C:\Finance\Docs** to a document library called **"Finance 2017"** to our tenant web at https://adventureworks.sharepoint.com - we need to create a .csv file and include a line like in the example below, this will instruct the script to import the contents associated with the line **Finance Files** into SharePoint to a root web into a document library called **"Finance 2017"**, along with the other lines to their respective destinations.
+Let's say we want to migrate the folder **C:\Finance\Docs** to a document library called **"Finance 2017"** to our tenant web at **https://adventureworks.sharepoint.com** - we need to create a .csv file and include a line like in the example below, this will instruct the script to import the contents associated with the line **Finance Files** into SharePoint to a root web into a document library called **"Finance 2017"**, along with the other lines to their respective destinations.
 
 In the example below we are importing three different sources but you can simply import one line at a time if you want to work in smaller import projects. I would recommend to take the example below for your migration projects, 
 
 |SourceName|SourceFolder|WebSiteName|TargetDocumentLibraryTitle|TargetDocumentLibraryURL|
 |----------|------------|-----------|--------------------------|------------------------|
+Dev Team (Legacy)|\\\Works\DevTeam\Projects|Development|Projects|Projects
 **Finance Files**    |**C:\Finance\Docs**|/|**Finance 2017**|**Finance**
-Dev Team (Legacy)|\\\Works\DevTeam\Projects|Dev|Projects|Projects
 Sales (Old Stuff)|\\\Customers\Bids|Commercial|Sales (Archived)|Sales2016
 
-
-### CSV File
 
 The .CSV file can contain one or more lines, where each line will contain the a source and a destination to be imported to SharePoint.
 
@@ -67,6 +57,55 @@ The columns above are the following:
 * **TargetDocumentLibraryURL** = the physical name for the document library, if an existing name is matched, the migration will reuse the library, otherwise a new document library will be created using this name for the URL, for example: **"FY2017DOCS"**
 
 
-### Cloning the Repo
-git clone https://github.com/MrDrSushi/SPOPSM.git
+#
+### Aditional Parameters
+#
 
+#
+`-Password` 
+
+You can supply a password by using the this parameter, for example: `-Password 123XYZ`, it will be sent as clear text and will expose your password for anybody, or you can use a variable with the encripted text, for example: `-Password $ENCPASSWORD`. This parameter allows you to automate the script execution skipping the prompt for your password, and should be used with caution to not expose your credential.
+
+#
+#
+
+`-LogName`
+
+location and name of the log file, if not specified, no logs will be generated
+
+#
+#
+
+`-CSVFile`
+
+location and name of the CSV FILE containing the instructions for the migration
+
+#
+#
+
+`-UserName`
+
+SharePoint User Name
+
+#
+#
+
+`-SiteUrl`
+
+URL of the Target WebSite (Top Level)
+
+
+
+You can generate a soft upload (a preview of a migration):
+
+`
+.\SPOPSM.ps1 -LogName .\Finance -CSVFile C:\Jobs\finance.csv -UserName johndoe@adventureworks.com -SiteUrl https://adventureworks.sharepoint.com/sites/dev  -DoNotCreateLibraries -DoNotCreateFolders -DoNotPerformUploads
+`
+
+In the example above, no document libraries, folder and files will be created on SharePoint, the screen output will show what an import will look like and the results are captured to a log file called **Finance.log** (another file called **Finance.html** is also generated, this is a copy of the console output in HTML format)
+
+
+#
+### Cloning the Repo
+
+`git clone https://github.com/MrDrSushi/SPOPSM.git`
