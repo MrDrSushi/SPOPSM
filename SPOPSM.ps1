@@ -29,7 +29,7 @@
 #  Author:   
 #                 Alex Gonsales 
 #                 agonsales@me.com
-#                 11/Dec/2017
+#                 19/Dec/2017
 #
 #  License:      
 #                 MIT
@@ -795,7 +795,7 @@ try {
             Write-Host $webSiteName.ServerRelativeUrl -ForegroundColor Yellow 
             Write-Host "- Skipping this record, check the .CSV file and try again! `n" -ForegroundColor Red
 
-            OperationReport -TimeStart $processingSourceStarted -SourceName $lines[$iLoop].SourceName -SourceFolder $lines[$iLoop].SourceFolder -DocumentLibrary $lines[$iLoop].TargetDocumentLibrary -WebSiteName $lines[$iLoop].WebSiteName
+            OperationReport -TimeStart $processingSourceStarted -SourceName $lines[$iLoop].SourceName -SourceFolder $lines[$iLoop].SourceFolder -DocumentLibrary $lines[$iLoop].TargetDocumentLibraryTitle -WebSiteName $lines[$iLoop].WebSiteName
             continue
         }
 
@@ -807,25 +807,23 @@ try {
         $line_TargetDocumentLibraryTitle = $lines[$iLoop].TargetDocumentLibraryTitle
         $line_TargetDocumentLibraryURL   = $lines[$iLoop].TargetDocumentLibraryURL
 
+        #
+        # issues a feedback to the user about the current "Source"
+        #
+
+        "=" * " Processing: $line_SourceName  ($line_WebSiteName) ".Length
+
+        Write-Host " Processing: " -NoNewline
+
+        Write-Host $line_SourceName -ForegroundColor Yellow -NoNewline
+        Write-Host "  ($line_WebSiteName)" -ForegroundColor Green 
+
+        "=" * " Processing: $line_SourceName  ($line_WebSiteName) ".Length
+    
+        Write-Host `n "- Started at: $processingSourceStarted"
+
         if (!$DoNotCreateLibraries.IsPresent)
         {
-            #
-            # issues a feedback to the user about the current "Source"
-            #
-
-            "=" * " Processing: $line_SourceName  ($line_WebSiteName) ".Length
-
-            Write-Host " Processing: " -NoNewline
-
-            Write-Host $line_SourceName -ForegroundColor Yellow -NoNewline
-            Write-Host "  ($line_WebSiteName)" -ForegroundColor Green 
-
-            "=" * " Processing: $line_SourceName  ($line_WebSiteName) ".Length
-      
-            Write-Host `n
-
-            Write-Host "- Started at: $processingSourceStarted"
-
             #
             #  Document Library
             #  ================
@@ -834,7 +832,7 @@ try {
             #
 
             Write-Host "`n- Checking for Document Library: " -NoNewline
-            Write-Host $line_TargetDocumentLibrary -ForegroundColor Yellow
+            Write-Host $line_TargetDocumentLibraryTitle -ForegroundColor Yellow
                         
             if ( (Get-PnPList -Identity $line_TargetDocumentLibraryURL -Web $webSiteName).Title.Length -eq 0 )
             {
