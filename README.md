@@ -13,27 +13,25 @@ Files migrated will have have their metadata preserved along with its original f
 There is also **"soft upload"** mode, which creates a report which files and folders will be renamed for containing invalid characters, and what will be ignored during the migration. 
 
 
-### Using the Script
+## Using the Script
 
-Let's suppose we want to import files to **https://adventureworks.sharepoint.com/sites/dev**.
-The first thing to do is to map the sources you plan to import in a custom .csv file, open a PowerShell session and point the script to run using the .csv you have previously created, for example:
+Given the following command line below:
 
-`.\SPOPSM.ps1 -LogName .\Finance -CSVFile C:\Jobs\finance.csv -UserName johndoe@adventureworks.com -SiteUrl https://adventureworks.sharepoint.com/sites/dev `
+![SPOPSM](./readme/command-line.png)
 
-
-
+It will run the script using the credentials from `johndoe@adventureworks.com` to migrate the files specified in the .csv file `C:\Jobs\finance.csv` to the tenant `https://adventureworks.sharepoint.com/sites/dev`, the operation will also record a log to a file in `C:\Jobs\Finance`
 
 
-### The CSV File
 
-Let's say we want to migrate the folder **C:\Finance\Docs** to a document library called **"Finance 2017"** to our tenant web at **https://adventureworks.sharepoint.com** - we need to create a .csv file and include a line like in the example below, this will instruct the script to import the contents associated with the line **Finance Files** into SharePoint to a root web into a document library called **"Finance 2017"**, along with the other lines to their respective destinations.
+## The CSV File
+Let's say we want to migrate the folder **C:\Finance\Docs** to a document library called **"Finance 2017"** to our tenant at **https://adventureworks.sharepoint.com/sites/apac** - we need to create a .csv file and include a line like in the example below, this will instruct the script to import the contents associated with the line **Finance Files** into SharePoint to a root web into a document library called **"Finance 2017"**, along with the other lines to their respective destinations.
 
 In the example below we are importing three different sources but you can simply import one line at a time if you want to work in smaller import projects. I would recommend to take the example below for your migration projects, 
 
-|SourceName|SourceFolder|WebSiteName|TargetDocumentLibraryTitle|TargetDocumentLibraryURL|
-|----------|------------|-----------|--------------------------|------------------------|
+SourceName | SourceFolder | WebSiteName | TargetDocumentLibraryTitle | TargetDocumentLibraryURL
+---------- | ------------ | ----------- | -------------------------- | ------------------------
 Dev Team (Legacy)|\\\Works\Dev\P\PRJ|Development|Projects|Projects
-**Finance Files**    |**C:\Finance\Docs**|/|**Finance 2017**|**Finance**
+**Finance Files**|**C:\Finance\Docs**|/|**Finance 2017**|**Finance**
 Sales (Old Stuff)|\\\Customers\Bids|Commercial|Sales (Archived)|Sales2016
 
 
@@ -58,33 +56,20 @@ The columns above are the following:
 
 
 
-### Aditional Parameters
+## Aditional Parameters
 
 
 
-`-Password` 
-
-You can supply a password by using the this parameter, for example: `-Password 123XYZ`, it will be sent as clear text and will expose your password for anybody, or you can use a variable with the encripted text, for example: `-Password $ENCPASSWORD`. This parameter allows you to automate the script execution skipping the prompt for your password, and should be used with caution to not expose your credential.
+`-Password` You can supply a password by using the this parameter, for example: `-Password 123XYZ`, it will be sent as clear text and will expose your password for anybody, or you can use a variable with the encripted text, for example: `-Password $ENCPASSWORD`. This parameter allows you to automate the script execution skipping the prompt for your password, and should be used with caution to not expose your credential.
 
 
-`-LogName`
+`-LogName` location and name of the log file, if not specified, no logs will be generated
 
-location and name of the log file, if not specified, no logs will be generated
+`-CSVFile` location and name of the CSV FILE containing the instructions for the migration
 
+`-UserName` SharePoint User Name
 
-`-CSVFile`
-
-location and name of the CSV FILE containing the instructions for the migration
-
-
-`-UserName`
-
-SharePoint User Name
-
-
-`-SiteUrl`
-
-URL of the Target WebSite (Top Level)
+`-SiteUrl` URL of the Target WebSite (Top Level)
 
 
 
@@ -97,6 +82,6 @@ You can generate a soft upload (a preview of a migration):
 In the example above, no document libraries, folder and files will be created on SharePoint, the screen output will show what an import will look like and the results are captured to a log file called **Finance.log** (another file called **Finance.html** is also generated, this is a copy of the console output in HTML format)
 
 
-### Cloning the Repo
+## Cloning the Repo
 
 `git clone https://github.com/MrDrSushi/SPOPSM.git`
