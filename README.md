@@ -30,24 +30,23 @@ On our previous example, we migrated to **https://adventureworks.sharepoint.com/
 
 ![SPOPSM](./readme/finance-xlsx.png)
 
-You can use any editor to create your own .csv files (Excel is probably the best when you want to deal with a lot of things), the columns are separated by commas, and yes, you can have values containing commas, just don't forget to match the exactly number of commas according to the columns, so a regular .csv files would look like the following:
-
+You can use any editor to create your own .csv files (Excel is probably the best option), the first line contains the column names, anything after are considered the values separated by commas, so a regular .csv file for only one source would look like the following:
 
 **SourceName,SourceFolder,WebSiteName,TargetDocumentLibraryTitle,TargetDocumentLibraryURL**
-**Samples,C:\Migrations\Samples\Miscelanea,/,Migration Samples,Samples**
+**Finance,C:\Finance\Docs,/,Finance 2017,FY17**
 
 
-The columns above are the following:
+The columns in the CSV file are:
 
 * **SourceName** = a friendly name for your source, it will be displayed during the migration
 
-* **SourceFolder =** source folder containing your files and folders, it could be something like: **C:\Finance** - or a share like: **\\\wks01\ADMIN\Shared\FY17\Reports**
+* **SourceFolder =** source containing your files and folders, it could be something like: **C:\Finance** - or a share like: **\\\wks01\ADMIN\Shared\FY17\Reports**
 
-* **WebSiteName** = the destination on SharePoint Online for your migration, the script will look for a web named after this value, for example, if you specify "Finance" (no quotes needed) the script will look this web called **"Finance"** under https://adventureworks.sharepoint.com, if you want to import within the same the root web, just leave blank or use a backslash **(/)**
+* **WebSiteName** = the destination for your migration, the script will look for a web named after this value, if you specify **Finance** the script will look a web called **"Finance"** under **https://adventureworks.sharepoint.com/sites/apac**, if you want to import within the same the root web, just leave blank or use a backslash **/** 
 
-* **TargetDocumentLibraryTitle** = if the script can't find a document library matched by **"TargetDocumentLibraryURL"**, a new document library will be create and this value will be used for its Title, for example: **"Finance 2017 Docs"**
+* **TargetDocumentLibraryTitle** = if there is no document library matched by **"TargetDocumentLibraryURL"**, a new document library will be created and this value will be used for its Title, for example: **"Finance 2017 Docs"** - this value is also used during the migration to provide a feedback to show where the files are being uploaded to.
 
-* **TargetDocumentLibraryURL** = the physical name for the document library, if an existing name is matched, the migration will reuse the library, otherwise a new document library will be created using this name for the URL, for example: **"FY2017DOCS"**
+* **TargetDocumentLibraryURL** = the physical name for the document library, if an existing name is matched, the migration will use the existing document library, otherwise a new document library will be created under **https://adventureworks.sharepoint.com/sites/apac**  using this value for the URL, for example: **"FY2017DOCS"**, which will result in **https://adventureworks.sharepoint.com/sites/apac/FY2017DOCS**
 
 
 
