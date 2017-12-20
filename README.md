@@ -13,7 +13,7 @@ Files migrated will have have their metadata preserved along with its original f
 There is also **"soft upload"** mode, which creates a report which files and folders will be renamed for containing invalid characters, and what will be ignored during the migration. 
 
 
-## Using the Script
+## Using the Script ##
 
 Given the following command line below:
 
@@ -28,7 +28,7 @@ It will run the script using the credentials from `johndoe@adventureworks.com` t
 
 
 
-## The CSV File
+## The CSV File ##
 Let's say we want to migrate the folder **C:\Finance\Docs** to a document library called **"Finance 2017"** to our tenant at **https://adventureworks.sharepoint.com/sites/apac** - we need to create a .csv file and include a line like in the example below, this will instruct the script to import the contents associated with the line **Finance Files** into SharePoint to a root web into a document library called **"Finance 2017"**, along with the other lines to their respective destinations.
 
 In the example below we are importing three different sources but you can simply import one line at a time if you want to work in smaller import projects. I would recommend to take the example below for your migration projects, 
@@ -61,7 +61,7 @@ The columns above are the following:
 
 
 
-## Aditional Parameters
+## Aditional Parameters ##
 
 
 
