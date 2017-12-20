@@ -65,16 +65,16 @@ The columns above are the following:
 
 
 
-`-Password` You can supply a password by using the this parameter, for example: `-Password 123XYZ`, it will be sent as clear text and will expose your password for anybody, or you can use a variable with the encripted text, for example: `-Password $ENCPASSWORD`. This parameter allows you to automate the script execution skipping the prompt for your password, and should be used with caution to not expose your credential.
+**`-Password`** You can supply a password by using the this parameter, for example: **`-Password 123XYZ`**, it will be sent as clear text and will expose your password for anybody, or you can use a variable with the encripted text, for example: **`-Password $ENCPASSWORD`**. This parameter allows you to automate the script execution skipping the prompt for your password, and should be used with caution to not expose your credential.
 
 
-`-LogName` location and name of the log file, if not specified, no logs will be generated
+**`-LogName`** location and name of the log file, if not specified, no logs will be generated
 
-`-CSVFile` location and name of the CSV FILE containing the instructions for the migration
+**`-CSVFile`** location and name of the CSV FILE containing the instructions for the migration
 
-`-UserName` SharePoint User Name
+**`-UserName`** SharePoint User Name
 
-`-SiteUrl` URL of the Target WebSite (Top Level)
+**`-SiteUrl`** URL of the Target WebSite (Top Level)
 
 
 
