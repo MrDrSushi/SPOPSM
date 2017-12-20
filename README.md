@@ -21,10 +21,7 @@ Given the following command line below:
 
 **`.\SPOPSM.ps1 -UserName johndoe@adventureworks.com -SiteUrl https://adventureworks.sharepoint.com/sites/apac -LogName .\Finance -CSVFile .\finance.csv`**
 
-It will run the script using the credentials from `johndoe@adventureworks.com` to migrate the files specified in the .csv file `C:\Jobs\finance.csv` to the tenant `https://adventureworks.sharepoint.com/sites/dev`, the operation will also record a log to a file in `C:\Jobs\Finance`
-
-
-![SPOPSM](./readme/command-line.png)
+It will run the script using the credentials from `johndoe@adventureworks.com` to migrate the specified files in the .csv file to `https://adventureworks.sharepoint.com/sites/dev`, and the operation will also record a log.
 
 
 
