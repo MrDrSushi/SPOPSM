@@ -17,9 +17,14 @@ There is also **"soft upload"** mode, which creates a report which files and fol
 
 Given the following command line below:
 
-![SPOPSM](./readme/command-line.png)
+`.\SPOPSM.ps1 -UserName johndoe@adventureworks.com -SiteUrl https://adventureworks.sharepoint.com/sites/apac -LogName .\Finance -CSVFile .\finance.csv`
 
 It will run the script using the credentials from `johndoe@adventureworks.com` to migrate the files specified in the .csv file `C:\Jobs\finance.csv` to the tenant `https://adventureworks.sharepoint.com/sites/dev`, the operation will also record a log to a file in `C:\Jobs\Finance`
+
+
+![SPOPSM](./readme/command-line.png)
+
+
 
 
 
