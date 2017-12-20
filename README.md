@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # SPOPSM #
 
 ![release](https://img.shields.io/badge/release-v1.0.0-blue.svg)
@@ -184,5 +183,4 @@ SPOPSM can perform validations to the source you are planning to migrate without
 
 ## Cloning the Repo
 
->>>>>>> 2129a6e7323266867b084d7678c50eeca6c2b457
 `git clone https://github.com/MrDrSushi/SPOPSM.git`
