@@ -35,8 +35,7 @@ You can use any editor to create your own .csv files (Excel is probably the best
 **SourceName,SourceFolder,WebSiteName,TargetDocumentLibraryTitle,TargetDocumentLibraryURL**
 **Finance,C:\Finance\Docs,/,Finance 2017,FY17**
 
-
-The columns in the CSV file are:
+The columns in the .CSV file are the following:
 
 * **SourceName** = a friendly name for your source, it will be displayed during the migration
 
@@ -50,46 +49,37 @@ The columns in the CSV file are:
 
 
 
+## Script Parameters
 
 
+* **`-Password`** You can supply a password by using the this parameter, for example: **`-Password 123XYZ`**, it will be sent as clear text and will expose your password for anybody, or you can use a variable with the encripted text, for example: **`-Password $ENCPASSWORD`**.
 
-## Aditional Parameters
+* **`-LogName`** location and name of the log file, if not specified, no logs will be generated
 
+* **`-CSVFile`** location and name of the CSV FILE containing the instructions for the migration
 
-**`-Password`** You can supply a password by using the this parameter, for example: **`-Password 123XYZ`**, it will be sent as clear text and will expose your password for anybody, or you can use a variable with the encripted text, for example: **`-Password $ENCPASSWORD`**. This parameter allows you to automate the script execution skipping the prompt for your password, and should be used with caution to not expose your credential.
+* **`-UserName`** SharePoint User Name
 
-**`-LogName`** location and name of the log file, if not specified, no logs will be generated
-
-**`-CSVFile`** location and name of the CSV FILE containing the instructions for the migration
-
-**`-UserName`** SharePoint User Name
-
-**`-SiteUrl`** URL of the Target WebSite (Top Level)
+* **`-SiteUrl`** URL of the Target WebSite (Top Level)
 
 
-
-You can generate a soft upload (a preview of a migration):
-
-
-In the example above, no document libraries, folder and files will be created on SharePoint, the screen output will show what an import will look like and the results are captured to a log file called **Finance.log** (another file called **Finance.html** is also generated, this is a copy of the console output in HTML format)
-
-
-ignoring invalid files such as **.tmp, .ds_store, .aspx, .asmx, .ascx, .master, .xap, .swf, .jar, .xsf, .htc**, it will also replace invalid characters found in files and/or folders avoiding any interruptions during the migration, while supporting files up to 15GB.
-
-SPOPSM can perform validations to the source you are planning to migrate without, I call this option **"soft upload"** mode, by combining the parameters **-DoNotCreateLibraries -DoNotCreateFolders -DoNotPerformUploads**
-
+You can generate a soft upload (migration [preview]), folders and files will not be created on SharePoint, the screen output will show what an import will look like and the results are captured to a log file called **Finance.log** (another file called **Finance.html** is also generated as a copy of the console output in HTML format).
 
 ```
 .\SPOPSM.ps1 -LogName .\Finance -CSVFile C:\Jobs\finance.csv -UserName johndoe@adventureworks.com -SiteUrl https://adventureworks.sharepoint.com/sites/apac  -DoNotCreateLibraries -DoNotCreateFolders -DoNotPerformUploads
 ```
 
 
+## Validations
 
 
+* **Invalid file types** = the script will ignore **.tmp, .ds_store, .aspx, .asmx, .ascx, .master, .xap, .swf, .jar, .xsf, .htc**, you can customise this list.
+
+* **Invalid characters** = the following group of characters: **%20** and **"?<>#%** are replaced by underline **_** (there is a function called ValidateName() and it can be customised to meet your requirements, another function called ValidateDocumentLibraryName() was left for future expansions)
 
 
 ## Cloning the Repo
 
 ```
-git clone https://github.com/MrDrSushi/SPOPSM.git
+    git clone https://github.com/MrDrSushi/SPOPSM.git
 ```
