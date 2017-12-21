@@ -1,4 +1,4 @@
-# SPOPSM #
+# SPOPSM 
 
 ![release](https://img.shields.io/badge/release-v1.0.0-blue.svg)
 ![status](https://img.shields.io/badge/status-stable-green.svg)
@@ -12,7 +12,7 @@ Finally an easy and open source solution aimed to simplify long and tedious migr
 
 
 
-## Using the Script ##
+## Using the Script 
 
 Given the following command line below:
 
@@ -24,7 +24,7 @@ It will run the script using the credentials from `johndoe@adventureworks.com` t
 
 
 
-## The CSV File ##
+## The CSV File 
 
 On our previous example, we migrated to **https://adventureworks.sharepoint.com/sites/apac**, the instructions used for the migration were placed in a **.csv file** (comma separated values), which specified the source for the file and the destination (the web where the document library is residing or will be created)
 
@@ -53,7 +53,7 @@ The columns in the CSV file are:
 
 
 
-## Aditional Parameters ##
+## Aditional Parameters
 
 
 **`-Password`** You can supply a password by using the this parameter, for example: **`-Password 123XYZ`**, it will be sent as clear text and will expose your password for anybody, or you can use a variable with the encripted text, for example: **`-Password $ENCPASSWORD`**. This parameter allows you to automate the script execution skipping the prompt for your password, and should be used with caution to not expose your credential.
@@ -79,7 +79,7 @@ ignoring invalid files such as **.tmp, .ds_store, .aspx, .asmx, .ascx, .master, 
 SPOPSM can perform validations to the source you are planning to migrate without, I call this option **"soft upload"** mode, by combining the parameters **-DoNotCreateLibraries -DoNotCreateFolders -DoNotPerformUploads**
 
 
-```PowerShell
+```
 .\SPOPSM.ps1 -LogName .\Finance -CSVFile C:\Jobs\finance.csv -UserName johndoe@adventureworks.com -SiteUrl https://adventureworks.sharepoint.com/sites/apac  -DoNotCreateLibraries -DoNotCreateFolders -DoNotPerformUploads
 ```
 
@@ -90,4 +90,6 @@ SPOPSM can perform validations to the source you are planning to migrate without
 
 ## Cloning the Repo
 
-`git clone https://github.com/MrDrSushi/SPOPSM.git`
+```
+git clone https://github.com/MrDrSushi/SPOPSM.git
+```
