@@ -1,4 +1,4 @@
-# SPOPSM #
+# SPOPSM 
 
 ![release](https://img.shields.io/badge/release-v1.0.0-blue.svg)
 ![status](https://img.shields.io/badge/status-stable-green.svg)
@@ -12,19 +12,27 @@ Finally an easy and open source solution aimed to simplify long and tedious migr
 
 
 
-## Using the Script ##
+## Using the Script 
 
-Given the following command line below:
-
-**`.\SPOPSM.ps1 -UserName johndoe@adventureworks.com -SiteUrl https://adventureworks.sharepoint.com/sites/apac -LogName .\Finance -CSVFile .\finance.csv`**
-
-It will run the script using the credentials from `johndoe@adventureworks.com` to migrate the specified files in the .csv file to `https://adventureworks.sharepoint.com/sites/apac`, and the operation will also record a log.
+Simply call the script by passing your user name, a valid tenant url to SPO, point to a valid .csv files containing the source for the migration and hit enter!
 
 
+**`.\SPOPSM.ps1 -SiteUrl https://adventureworks.sharepoint.com/sites/apac -CSVFile .\finance.csv`**
+
+The command above will produce the following output:
+
+![SPOPSM](./readme/script-running.png)
+
+
+Once the migration is completed, the script will produce:
+
+![SPOPSM](./readme/script-totals.png)
 
 
 
-## The CSV File ##
+
+
+## The CSV File 
 
 On our previous example, we migrated to **https://adventureworks.sharepoint.com/sites/apac**, the instructions used for the migration were placed in a **.csv file** (comma separated values), which specified the source for the file and the destination (the web where the document library is residing or will be created)
 
@@ -35,8 +43,7 @@ You can use any editor to create your own .csv files (Excel is probably the best
 **SourceName,SourceFolder,WebSiteName,TargetDocumentLibraryTitle,TargetDocumentLibraryURL**
 **Finance,C:\Finance\Docs,/,Finance 2017,FY17**
 
-
-The columns in the CSV file are:
+The columns in the .CSV file are the following:
 
 * **SourceName** = a friendly name for your source, it will be displayed during the migration
 
@@ -50,44 +57,56 @@ The columns in the CSV file are:
 
 
 
+## Script Parameters
 
 
+* **`-SiteUrl`** = [Required] address used to connect to SharePoint Online (tenant url), once the script connects to this address, it will migrate all the data to the specified sub webs specified in the .csv, example: **`-SiteUrl https://adventureworks.sharepoint.com`** 
 
-## Aditional Parameters ##
+* **`-UserName`** = [Optional] the SharePoint user name for the connection, example:  **`-UserName janefan@adventureworks.com`**, or use a variable: **`-UserName $creds.UserName`** (if not present, you will be prompted)
 
+* **`-Password`** = [Optional] You can supply a password for the user account by using this parameter, for example: **`-Password 123XYZ`**, passwords will be sent as clear text and will exposed unless you use and encripted variable, for example: **`-Password $creds.Password`** (if not present, you will be prompted)
 
-**`-Password`** You can supply a password by using the this parameter, for example: **`-Password 123XYZ`**, it will be sent as clear text and will expose your password for anybody, or you can use a variable with the encripted text, for example: **`-Password $ENCPASSWORD`**. This parameter allows you to automate the script execution skipping the prompt for your password, and should be used with caution to not expose your credential.
+* **`-LogName`** = [Optional] this parameter when specified will point to a location and name for a log files, example: **`-LogName C:\Migration Logs\DevFiles`** - if this parameter is not present, no logs will be generated.
 
-**`-LogName`** location and name of the log file, if not specified, no logs will be generated
+* **`-CSVFile`** = [Required] location and name of the .csv file containing the instructions for the migration, example: **`-CSVFile C:\DOCS\Source.csv`**
 
-**`-CSVFile`** location and name of the CSV FILE containing the instructions for the migration
+* **`-DoNotCreateLibraries`** = [Optional] when present, the script will NOT create any document libraries, it speeds up the execution by skipping the validations of existing document libraries, in other words, you know the contents of your migration and all uploads will find the respective document libraries already in the server, skipping the need to creating new ones
 
-**`-UserName`** SharePoint User Name
+* **`-DoNotCreateFolders`** = [Optional] similar to document libraries, in this case assuming the document library is present, the script will transform the migration of complex folder structures into a flat structure, very useful for environmentS based on metadata navigation instead of complex folder structures. (In this current version my script is not handling duplicated files, causing them to be overwritten - for future release I will add increments to file names to avoid this issue.)
 
-**`-SiteUrl`** URL of the Target WebSite (Top Level)
-
-
-
-You can generate a soft upload (a preview of a migration):
+* **`-DoNotPerformUploads`** = [Optional] when present, no files will be created in the tenant, it causes the **soft upload** when combined with **-DoNotCreateLibraries** and **-DoCreateFolders**, if the other parameters are not present and this one is present, you will get the creation of document libraries and folders but no files uploaded
 
 
-In the example above, no document libraries, folder and files will be created on SharePoint, the screen output will show what an import will look like and the results are captured to a log file called **Finance.log** (another file called **Finance.html** is also generated, this is a copy of the console output in HTML format)
+Combining parameters:
 
+You can generate a **soft upload** (migration [preview]), folders and files will not be created on SharePoint, the screen output will show what an import will look like and the results are captured to a log file called **Finance.log** (another file called **Finance.html** is also generated as a copy of the console output in HTML format).
 
-ignoring invalid files such as **.tmp, .ds_store, .aspx, .asmx, .ascx, .master, .xap, .swf, .jar, .xsf, .htc**, it will also replace invalid characters found in files and/or folders avoiding any interruptions during the migration, while supporting files up to 15GB.
+```
+$url = "https://adventureworks.sharepoint.com/sites/Finance"
+$csv = "C:\Jobs\finance.csv"
+$log = "X:\Migration Project\Finance\Logs\Finance-Archive-Log"
+$creds = Get-Credential
 
-SPOPSM can perform validations to the source you are planning to migrate without, I call this option **"soft upload"** mode, by combining the parameters **-DoNotCreateLibraries -DoNotCreateFolders -DoNotPerformUploads**
+.\SPOPSM.ps1 -LogName $log -CSVFile $csv -UserName $creds.Username -Password $creds.Password -SiteUrl $url  -DoNotCreateLibraries -DoNotCreateFolders -DoNotPerformUploads
+```
 
+Fewer parameters, the script will prompt the user for credentials:
 
-```PowerShell
-.\SPOPSM.ps1 -LogName .\Finance -CSVFile C:\Jobs\finance.csv -UserName johndoe@adventureworks.com -SiteUrl https://adventureworks.sharepoint.com/sites/apac  -DoNotCreateLibraries -DoNotCreateFolders -DoNotPerformUploads
+```
+.\SPOPSM.ps1 -SiteUrl https://adventureworks.sharepoint.com/sites/apac -CSVFile .\finance.csv
 ```
 
 
+## Validations
 
 
+* **Invalid file types** = the script will ignore **.tmp, .ds_store, .aspx, .asmx, .ascx, .master, .xap, .swf, .jar, .xsf, .htc**, you can customise this list.
+
+* **Invalid characters** = the following group of characters: **%20** and **"?<>#%** are replaced by underline **_** (there is a function called ValidateName() and it can be customised to meet your requirements, another function called ValidateDocumentLibraryName() was left for future expansions)
 
 
 ## Cloning the Repo
 
-`git clone https://github.com/MrDrSushi/SPOPSM.git`
+```
+    git clone https://github.com/MrDrSushi/SPOPSM.git
+```

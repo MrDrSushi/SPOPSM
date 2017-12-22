@@ -1,5 +1,5 @@
 ﻿param (
-		#===========================================================================================================================[ Input Parameters ]
+        #===========================================================================================================================[ Input Parameters ]
         
             $LogName ,                         # location and name of the log file, if not specified, no logs will be generated
         
@@ -11,11 +11,11 @@
 
             $SiteUrl ,                         # URL of the Target WebSite (Top Level)
 
-            [switch]$DoNotCreateLibraries ,    # will NOT CREATE/UPDATE SharePoint Document Libraries
+            [switch]$DoNotCreateLibraries ,    # will NOT CREATE SharePoint Document Libraries
 
             [switch]$DoNotCreateFolders ,      # will NOT CREATE SharePoint folders 
 
-            [switch]$DoNotPerformUploads       # performs a "soft upload" (displays an output without performing any uploads)
+            [switch]$DoNotPerformUploads       # will NOT UPLOAD files to SharePoint (displays only the file name)
 
         #===========================================================================================================================[ End of the Input Parameters ]
 )
@@ -684,11 +684,16 @@ try {
     #  Checks the User Name
     #
 
-    if ($UserName.Length -eq 0)
+    if ($UserName -eq $null)
     {
-        Write-Host "`n- The parameter -UserName cannot cannot be blank!" -ForegroundColor Red
-        Write-Host "- Provide a valid value for -UserName parameter, example:  -UserName john.doe@company.com `n" -ForegroundColor Red
-        break
+        $UserName = Read-Host "User Name"
+
+        if ($UserName.Length -eq 0)
+        {
+            Write-Host "`n- The UserName cannot cannot be blank!" -ForegroundColor Red
+            Write-Host "- You can also provide valid value for -UserName parameter, example:  -UserName john.doe@company.com `n" -ForegroundColor Red
+            break
+        }
     }
 
     # 
@@ -820,7 +825,8 @@ try {
 
         "=" * " Processing: $line_SourceName  ($line_WebSiteName) ".Length
     
-        Write-Host `n "- Started at: $processingSourceStarted"
+        Write-Host `n         
+        Write-Host "- Started at: $processingSourceStarted"
 
         if (!$DoNotCreateLibraries.IsPresent)
         {
@@ -937,14 +943,21 @@ try {
             {
                 Write-Host `n`n $currentFile.FullName  -ForegroundColor Green  -NoNewline
 
-                $cleanFolderName = ValidateName -Value $currentFile.FullName.Replace($line_SourceFolder,'').Replace('\','/')  
-
-                if (!$DoNotCreateFolders.IsPresent -and $DocumentLibrary.Name.Length -gt 0) 
-                {
-                    $result = Create-FolderHierarchy -TopFolder $DocumentLibrary -FolderUrl $cleanFolderName
+                if ($DoNotCreateFolders.IsPresent) 
+                {                    
+                    $cleanFolderName = "/"
                 }
                 else
                 {
+                    $cleanFolderName = ValidateName -Value $currentFile.FullName.Replace($line_SourceFolder,'').Replace('\','/')  
+                }
+
+                if (!$DoNotCreateFolders.IsPresent -and $DocumentLibrary.Name.Length -gt 0) 
+                {                    
+                    $result = Create-FolderHierarchy -TopFolder $DocumentLibrary -FolderUrl $cleanFolderName
+                }
+                else
+                {                    
                     $result = $true
                 }
 
@@ -970,9 +983,16 @@ try {
 
                 $validFileName = ValidateName -Value $currentFile.FullName.Replace($line_SourceFolder,'')  
                 $cleanFileName = [System.IO.Path]::GetFileName($validFileName)
-        
-                $validFolderName = $validFileName 
-                $cleanFolderName = ([System.IO.Path]::GetDirectoryName($validFolderName).Replace('\','/'))  # + '/'
+
+                if ($DoNotCreateFolders.IsPresent) 
+                {                    
+                    $cleanFolderName = "/"
+                }
+                else
+                {
+                    $cleanFolderName = ([System.IO.Path]::GetDirectoryName($validFileName).Replace('\','/'))  # + '/'
+                }        
+                
 
                 if (!$cleanFolderName.EndsWith('/'))
                 {
