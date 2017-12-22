@@ -24,7 +24,7 @@ The command above will produce the following output:
 ![SPOPSM](./readme/script-running.png)
 
 
-Once the migration is completed, the script will produce:
+With the migration complete, a summary will be displayed:
 
 ![SPOPSM](./readme/script-totals.png)
 
@@ -91,14 +91,12 @@ $creds = Get-Credential
 .\SPOPSM.ps1 -LogName $log -CSVFile $csv -UserName $creds.Username -Password $creds.Password -SiteUrl $url  -DoNotCreateLibraries -DoNotCreateFolders -DoNotPerformUploads
 ```
 
-Fewer parameters, the script will prompt the user for credentials:
+With fewer parameters (the script will prompt the user for credentials):
 
 ```
 .\SPOPSM.ps1 -SiteUrl https://adventureworks.sharepoint.com/sites/apac -CSVFile .\finance.csv
 ```
 
-
-## Validations
 
 ## Validations
 
