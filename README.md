@@ -76,6 +76,7 @@ The columns in the .CSV file are the following:
 
 * **`-DoNotPerformUploads`** = [Optional] when present, no files will be created in the tenant, it causes the **soft upload** when combined with **-DoNotCreateLibraries** and **-DoCreateFolders**, if the other parameters are not present and this one is present, you will get the creation of document libraries and folders but no files uploaded
 
+* **`-UserName`** SharePoint User Name
 
 Combining parameters:
 
@@ -96,6 +97,8 @@ Fewer parameters, the script will prompt the user for credentials:
 .\SPOPSM.ps1 -SiteUrl https://adventureworks.sharepoint.com/sites/apac -CSVFile .\finance.csv
 ```
 
+
+## Validations
 
 ## Validations
 
