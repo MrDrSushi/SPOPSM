@@ -53,7 +53,7 @@ The columns in the .CSV file are the following:
 
 * **TargetDocumentLibraryTitle** = if there is no document library matched by **"TargetDocumentLibraryURL"**, a new document library will be created and this value will be used for its Title, for example: **"Finance 2017 Docs"** - this value is also used during the migration to provide a feedback to show where the files are being uploaded to.
 
-* **TargetDocumentLibraryURL** = the physical name for the document library, if an existing name is matched, the migration will use the existing document library, otherwise a new document library will be created under **https://adventureworks.sharepoint.com/sites/apac**  using this value for the URL, for example: **"FY2017DOCS"**, which will result in **https://adventureworks.sharepoint.com/sites/apac/FY2017DOCS**
+* **TargetDocumentLibraryURL** = the physical name for the document library, if an existing name is matched, the migration will use the existing document library, otherwise a new document library will be created under **https://adventureworks.sharepoint.com/sites/apac**  using this value for the URL, for example: **FY17**, which will result in **https://adventureworks.sharepoint.com/sites/apac/FY17**
 
 
 
