@@ -32,13 +32,13 @@ With the migration complete, a summary will be displayed:
 
 
 
-## The CSV File 
+## Migrating your files
 
-On our previous example, we migrated to **https://adventureworks.sharepoint.com/sites/apac**, the instructions used for the migration were placed in a **.csv file** (comma separated values), which specified the source for the file and the destination (the web where the document library is residing or will be created)
+Every migration starts by creating a .csv file, and on our example, we migrated our files to **https://adventureworks.sharepoint.com/sites/apac** using the instructions from  **.csv file** called **fiance.csv**, so let's take a look on the file opened in Excel:
 
 ![SPOPSM](./readme/finance-xlsx.png)
 
-You can use any editor to create your own .csv files (Excel is probably the best option), the first line contains the column names, anything after are considered the values separated by commas, so a regular .csv file for only one source would look like the following:
+As you can see from the screen shot above, the file contains the source, the destionation and a couple of useful parameters which will be used by the script to get your files migratesd to SharePoint. You can use any editor to create your own .csv files (Excel is probably the best option), the first line contains the column names,  are considered the values separated by commas, so a regular .csv file for only one source would look like the following:
 
 **SourceName,SourceFolder,WebSiteName,TargetDocumentLibraryTitle,TargetDocumentLibraryURL**
 **Finance,C:\Finance\Docs,/,Finance 2017,FY17**
