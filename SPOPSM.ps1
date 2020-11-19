@@ -952,7 +952,7 @@ try {
         # The AuthenticationMode is now a mandatory part of the script to solve issues around HTTP 403
         # Since Microsoft has made changes to enforce authentication control on SPO it becomes an important part of all scripts
 
-        $CSOM_context.AuthenticationMode = [Microsoft.SharePoint.Client.ClientAuthenticationMode]::
+        $CSOM_context.AuthenticationMode = [Microsoft.SharePoint.Client.ClientAuthenticationMode]::Default
 
         $CSOM_context.Credentials = $CSOM_credentials
         $CSOM_context.RequestTimeout = 300000
