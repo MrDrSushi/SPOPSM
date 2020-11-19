@@ -70,6 +70,8 @@ The columns in the .CSV file are the following:
 
 * **`-CSVFile`** = [Required] location and name of the .csv file containing the instructions for the migration, example: **`-CSVFile C:\DOCS\Source.csv`**
 
+* **`-UseMFA`** = [Optional] this parameter is required for accounts authenticated through MFA, you WILL NEED to use this if your account is not excluded from MFA authentication, you may consider using Service Credential Accounts instead.
+
 * **`-DoNotCreateLibraries`** = [Optional] when present, the script will NOT create any document libraries, it speeds up the execution by skipping the validations of existing document libraries, in other words, you know the contents of your migration and all uploads will find the respective document libraries already in the server, skipping the need to creating new ones
 
 * **`-DoNotCreateFolders`** = [Optional] similar to document libraries, in this case assuming the document library is present, the script will transform the migration of complex folder structures into a flat structure, very useful for environmentS based on metadata navigation instead of complex folder structures. (In this current version my script is not handling duplicated files, causing them to be overwritten - for future release I will add increments to file names to avoid this issue.)
