@@ -952,21 +952,16 @@ try {
         # The AuthenticationMode is now a mandatory part of the script to solve issues around HTTP 403
         # Since Microsoft has made changes to enforce authentication control on SPO it becomes an important part of all scripts
 
-        $CSOM_context.AuthenticationMode = [Microsoft.SharePoint.Client.ClientAuthenticationMode]::Default
+        $CSOM_context.AuthenticationMode = [Microsoft.SharePoint.Client.ClientAuthenticationMode]::
 
         $CSOM_context.Credentials = $CSOM_credentials
         $CSOM_context.RequestTimeout = 300000
 
         try 
         {
-            write-output "accessing DocLib"
-
             $DocumentLibrary = $CSOM_context.Web.Lists.GetByTitle($line_TargetDocumentLibraryTitle).RootFolder
             $CSOM_context.Load($DocumentLibrary)
             $CSOM_context.ExecuteQuery()
-
-            write-output "value for DocumentLibrary:"
-            write-output $DocumentLibrary
         }
         catch 
         {
