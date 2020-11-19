@@ -11,6 +11,12 @@
 
             $SiteUrl ,                         # URL of the Target WebSite (Top Level)
 
+            [switch]$UseMFA ,                  # for MFA authenticated accounts, you WILL NEED to use this if you are account is not excluded from MFA authentication
+                                               # a good practice for running automation scripts is to use Service Credential Accounts instead of your own user account,
+                                               # yo may consider running your scripts without your own end user account to avoid MFA prompts and other issues, the second
+                                               # and less recommended practice, is to modify the conditional access rules and add your own account to the list of
+                                               # accounts being excluded from MFA prompts, this will will give you an easy to access cloud service but with less security
+
             [switch]$DoNotCreateLibraries ,    # will NOT CREATE SharePoint Document Libraries
 
             [switch]$DoNotCreateFolders ,      # will NOT CREATE SharePoint folders 
@@ -556,71 +562,105 @@ function OperationReport() {
 }
 
 
+# ================================================================================================
+# ==========================================================================[ STARTING POINT ]====
+# ================================================================================================
+
+cls
+
+
 #
 #   Check module dependencies
 #
 
-if ((Get-Module -Name Microsoft.Online.SharePoint.PowerShell -ListAvailable).Name.Length -eq 0 -and (Get-Module -Name SharePointPnPPowerShell* -ListAvailable).Name.Length -eq 0)
+
+# ======================  Microsoft.Online.SharePoint.PowerShell
+
+
+if ( (Get-Module -Name Microsoft.Online.SharePoint.PowerShell -ListAvailable).Name.Length -eq 0 )
 {
-    Write-Host "PowerShell module 'Microsoft.Online.SharePoint.PowerShell' and module 'SharePointPnPPowerShellOnline' not found!"
-    Write-Host "Download and install the 'SharePoint Online Management Shell - https://www.microsoft.com/en-us/download/details.aspx?id=35588"
-    Write-Host "The module 'SharePointPnPPowerShellOnline' will be installed by the script the next time once you download and install 'Microsoft.Online.SharePoint.PowerShell'"
-    Write-Host "It might be necessary to restart your computer once you have installed this module on your computer. `n"
-    break
-} 
-elseif ((Get-Module -Name Microsoft.Online.SharePoint.PowerShell -ListAvailable).Name.Length -ne 0 -and (Get-Module -Name SharePointPnPPowerShell* -ListAvailable).Name.Length -eq 0)
+    Write-Host "SharePoint Online Management Shell not found!"
+    Write-Host "Download and install the SharePoint Online Management Shell from https://www.microsoft.com/en-us/download/details.aspx?id=35588"
+    Write-Host "It might be necessary to restart your computer once you have completed the installation. `n"
+    exit
+}
+else
+{
+    Import-Module Microsoft.Online.SharePoint.PowerShell -DisableNameChecking 
+}
+
+
+# ======================  SharePointPnPPowerShellOnline
+
+
+if ( (Get-Module -Name SharePointPnPPowerShellOnline -ListAvailable | ? Version -eq "2.23.1802.0").Name.Length -eq 0 )
 {
     try 
     {
-        Write-Host "PowerShell module 'SharePointPnP.PowerShell' not found!"
-        Write-Host "The script requires 'SharePointPnP.PowerShell' extension to communicate and interact with SharePoint."
-        Write-Host "Once you allow the script to install this requirement, the script will continue.`n"
+        Write-Host "PowerShell module 'SharePointPnPPowerShellOnline' version 2.23.1802.0  not found!"
+        Write-Host "The module is available at https://github.com/SharePoint/PnP-PowerShell/releases/tag/2.23.1802.0"  
+        Write-Host "The script will try to install this module, once installed, the script will continue.`n"
 
-        Write-Host "- Awaiting permissions to install PowerShell module 'SharePointPnP.PowerShell'" -ForegroundColor Yellow
+        Write-Host "- Trying to install PowerShell module 'SharePointPnPPowerShellOnline' version 2.23.1802.0  ... `n " -ForegroundColor Yellow
              
-        Install-Module SharePointPnPPowerShellOnline -SkipPublisherCheck -AllowClobber
+        Install-Module SharePointPnPPowerShellOnline -RequiredVersion 2.23.1802.0 -SkipPublisherCheck -AllowClobber -Force        
+        Write-Host "- Module succesfully intalled! `n " -ForegroundColor Yellow
+
+        Write-Host "- Loading module ... `n " -ForegroundColor Yellow
+        Import-Module SharePointPnPPowerShellOnline -RequiredVersion 2.23.1802.0 -DisableNameChecking -ErrorAction Stop
     }
     catch 
     {
-        Write-Host "Error while trying to install PowerShell module 'PSAlphaFS'!"
-        Write-Host "Check your connectivity to the Internet, this script is trying to connect to the PowerShell Online Gallery `n"
-        break
+        Write-Host "Error while trying to install PowerShell module 'SharePointPnPPowerShellOnline'!"
+        Write-Host "The module is also available at https://github.com/SharePoint/PnP-PowerShell/releases/tag/2.23.1802.0  `n"
+        exit
     }    
 }
 else 
 {
     try 
     {
-        Import-Module SharePointPnPPowerShellOnline -DisableNameChecking -ErrorAction Stop
+        Import-Module SharePointPnPPowerShellOnline -RequiredVersion 2.23.1802.0 -DisableNameChecking -ErrorAction Stop
     }
     catch
     {
         Write-Host "`nPowerShell module 'SharePointPnPPowerShellOnline' not loaded!"
-        Write-Host "Check if you computer has the correct PowerShell module properly installed before running the script.`n"
-        break
+        Write-Host "Check if your computer has the correct PowerShell module properly installed before running the script."
+        Write-Host "The script requires SharePointPnPPowerShellOnline version 2.23.1802.0 "  
+        Write-Host "The module is available at https://github.com/SharePoint/PnP-PowerShell/releases/tag/2.23.1802.0  `n"  
+        exit
     }
 }
 
-if ((Get-Module -Name PSAlphaFS -ListAvailable).Name.Length -eq 0)
+
+# ======================  PSAlphaFS 
+
+
+if ( (Get-Module -Name PSAlphaFS -ListAvailable | ? Version -eq "2.0.0.1").Name.Length -eq 0 )
 {
     try 
     {
-        Write-Host "PowerShell module 'PSAlphaFS' not found!"
-        Write-Host "The script requires 'PSAlphaFS' extension in order to support Long File Names from the file system."
-        Write-Host "Once you allow the script to install this requirement the script will continue.`n"
+        Write-Host "PowerShell module PSAlphaFS version 2.0.0.1  not found!"
+        Write-Host "The module is available at https://www.powershellgallery.com/packages/PSAlphaFS/2.0.0.1 "  
+        Write-Host "The script will try to install this module, once installed, the script will continue.`n"
 
-        Write-Host "- Awaiting permissions to install PowerShell module 'PSAlphaFS'" -ForegroundColor Yellow
+        Write-Host "- Trying to install PowerShell module 'PSAlphaFS version 2.0.0.1' ... `n " -ForegroundColor Yellow
              
-        Install-Module -Name PSAlphaFS -RequiredVersion 1.0.0.0 
-        Import-Module -Name PSAlphaFS  -Force -ErrorAction Stop  # will try to force the loading to avoid the end of the session
+        Install-Module -Name PSAlphaFS -RequiredVersion 2.0.0.1 -SkipPublisherCheck -AllowClobber -Force
+        Write-Host "- Module succesfully intalled! `n " -ForegroundColor Yellow
+
+        Write-Host "- Loading module ... `n " -ForegroundColor Yellow
+        Import-Module -Name PSAlphaFS -RequiredVersion 2.0.0.1 -Force -ErrorAction Stop
     }
     catch 
     {
         Write-Host "`nError while trying to install PowerShell module 'PSAlphaFS'!"
-        Write-Host "Check your connectivity to the Internet, this script is trying to connect to the PowerShell Online Gallery `n"
+        Write-Host "Check your connectivity to the Internet, this script is trying to connect to the PowerShell Online Gallery "
+        Write-Host "The module is available at https://www.powershellgallery.com/packages/PSAlphaFS/2.0.0.1  `n"  
         break
     }
 }
+
 
 #
 #  Input Parameters Validation
@@ -678,8 +718,13 @@ try {
         Write-Host "`n- Error opening the file specified by the the parameter -CSVFile!" -ForegroundColor Red
         Write-Host "-" $_.Exception.Message `n          -ForegroundColor Red
         break
-    }
-    
+    }    
+
+    # 
+    #  Connect to SPO
+    #
+
+
     #
     #  Checks the User Name
     #
@@ -696,8 +741,8 @@ try {
         }
     }
 
-    # 
-    #  Connect to SPO
+    #
+    #  Checks the User Name
     #
 
     if ($Password -eq $null)
@@ -712,21 +757,50 @@ try {
         }
     }
 
+    #
+    #  Creation of the credentials 
+    #
+
     $credentials = if ($credentials.length -eq 0) { New-Object System.Management.Automation.PSCredential ($UserName, $Password) } else { $credentials }
 
-    try {    
-        Connect-PnPOnline -Url $SiteUrl -Credentials $credentials -ErrorAction Stop 
-    }
-    catch {
-        Write-Host "`n- Error connecting to the SharePoint site!"  -ForegroundColor Red
-        Write-Host "- Check the values provided for your username, password and to the site url you are trying to connect to." -ForegroundColor Red
-        Write-Host "-" $_.Exception.Message `n  -ForegroundColor Red        
 
-        $Password = $null
-        $credentials = $null
+    #
+    #  MFA authentication is now an official part of this script and future improvements should be considered for the whole
+    #  authentication optiosn, I will revisit this script and modify how credentials are being passed and required, probably removing them all
+    #
 
-        break
+    if ($UseMFA)
+    {
+        try 
+        {    
+            #TODO  I need to work on the improvement to capture connection failures for connect-pnponline, this command does not use -ErrorAction
+
+            Connect-PnPOnline -Url $SiteUrl -UseWebLogin -ErrorAction Stop             
+        }
+        catch {
+            Write-Host "`n- Error connecting to the SharePoint site!"  -ForegroundColor Red
+            Write-Host "- Check the values provided for your MFA enabled account: username, password, and authentication token." -ForegroundColor Red
+            Write-Host "-" $_.Exception.Message `n  -ForegroundColor Red
+            break
+        }
     }
+    else
+    {        
+        try 
+        {    
+            Connect-PnPOnline -Url $SiteUrl -Credentials $credentials -ErrorAction Stop 
+        }
+        catch {
+            Write-Host "`n- Error connecting to the SharePoint site!"  -ForegroundColor Red
+            Write-Host "- Check the values provided for your username, password and to the site url you are trying to connect to." -ForegroundColor Red
+            Write-Host "-" $_.Exception.Message `n  -ForegroundColor Red        
+
+            $Password = $null
+            $credentials = $null
+
+            break
+        }
+    }   
     
     #
     #  Process each line from the CSV File 
@@ -834,7 +908,7 @@ try {
             #  Document Library
             #  ================
             #
-            #  It will try to find a match, otherwise new one will be created
+            #  It will try to find a match, otherwise a new DOCUMENT LIBRARY will be created
             #
 
             Write-Host "`n- Checking for Document Library: " -NoNewline
@@ -874,14 +948,25 @@ try {
     
         $CSOM_credentials = New-Object Microsoft.SharePoint.Client.SharePointOnlineCredentials($credentials.UserName, $credentials.Password)
         $CSOM_context = New-Object Microsoft.SharePoint.Client.ClientContext($webSiteName.Url)
+        
+        # The AuthenticationMode is now a mandatory part of the script to solve issues around HTTP 403
+        # Since Microsoft has made changes to enforce authentication control on SPO it becomes an important part of all scripts
+
+        $CSOM_context.AuthenticationMode = [Microsoft.SharePoint.Client.ClientAuthenticationMode]::Default
+
         $CSOM_context.Credentials = $CSOM_credentials
-        #$CSOM_context.RequestTimeout = 300000
+        $CSOM_context.RequestTimeout = 300000
 
         try 
         {
+            write-output "accessing DocLib"
+
             $DocumentLibrary = $CSOM_context.Web.Lists.GetByTitle($line_TargetDocumentLibraryTitle).RootFolder
             $CSOM_context.Load($DocumentLibrary)
             $CSOM_context.ExecuteQuery()
+
+            write-output "value for DocumentLibrary:"
+            write-output $DocumentLibrary
         }
         catch 
         {
